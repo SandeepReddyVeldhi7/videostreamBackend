@@ -63,7 +63,9 @@ app.use('/protected', verifyJWT, (req, res) => {
     res.json({ message: 'This is protected data' });
 });
 
-
+app.get("/apple", (req, res) => {
+  res.send("Server is up and running");
+});
 // Error handling middleware in Express
 app.use((err, req, res, next) => {
     console.error("Backend Error:", err);
