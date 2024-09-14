@@ -1,0 +1,86 @@
+import express from "express"
+import dataBase from "./config/dataBase.js"
+import cors from "cors"
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser"
+dotenv.config();
+
+const app = express()
+dataBase()
+
+
+
+//middlewares
+
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials:true
+}))
+app.options("*", cors());
+
+
+console.log("url", process.env.FRONTEND_URL);
+
+app.use(express.json({limit:"16kb"}));
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static("public"))
+app.use(cookieParser())
+
+
+
+
+
+//routes import
+import userRouter from "./routes/user.routes.js"
+import videoRouter from "./routes/video.routes.js";
+import likeRouter from "./routes/like.routes.js";
+import commentRouter from "./routes/comment.routes.js";
+import dashboardRouter from "./routes/dashboard.routes.js";
+import subscriptionRouter from "./routes/subscription.routes.js";
+import playlistRouter from"./routes/playlist.routes.js"
+import { APIError } from "./utils/APIError.js";
+import { verifyJWT } from "./middleware/auth.middleware.js";
+
+
+
+
+
+// routes declaration
+// http://localhost:6000/api/v1/users/register
+
+app.use("/api/v1/users",userRouter)
+app.use("/api/v1/video", videoRouter);
+app.use("/api/v1/like", likeRouter);
+app.use("/api/v1/comment", commentRouter);
+app.use("/api/v1/dashboard", dashboardRouter);
+app.use("/api/v1/subscription", subscriptionRouter);
+app.use("/api/v1/playlist", playlistRouter);
+// Protected route
+app.use('/protected', verifyJWT, (req, res) => {
+    res.json({ message: 'This is protected data' });
+});
+
+
+// Error handling middleware in Express
+app.use((err, req, res, next) => {
+    console.error("Backend Error:", err);
+  if (err instanceof APIError) {
+    return res.status(err.statusCode).json({
+      error: err.message,
+    });
+  }
+
+  res.status(500).json({
+    error: "An unexpected error occurred",
+  });
+});
+
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT,() => {
+    console.log(`app is running on ${PORT}`)
+})
