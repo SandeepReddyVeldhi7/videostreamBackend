@@ -95,7 +95,9 @@ userSchema.methods.generateRefreshToken = function () {
     );
 }
 
-console.log(process.env.ACCESS_TOKEN, process.env.REFRESH_TOKEN);
+
+console.log("ACCESS_TOKEN_EXPIRES:", process.env.ACCESS_TOKEN_EXPIRES);
+console.log("REFRESH_TOKEN_EXPIRES:", process.env.REFRESH_TOKEN_EXPIRES);
 
 
 
