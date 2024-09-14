@@ -1,5 +1,5 @@
 import express from "express"
-import dataBase from "./config/dataBase.js"
+import dataBase from "./src/config/dataBase.js"
 import cors from "cors"
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser"
@@ -34,15 +34,15 @@ app.use(cookieParser())
 
 
 //routes import
-import userRouter from "./routes/user.routes.js"
-import videoRouter from "./routes/video.routes.js";
-import likeRouter from "./routes/like.routes.js";
-import commentRouter from "./routes/comment.routes.js";
-import dashboardRouter from "./routes/dashboard.routes.js";
-import subscriptionRouter from "./routes/subscription.routes.js";
-import playlistRouter from"./routes/playlist.routes.js"
-import { APIError } from "./utils/APIError.js";
-import { verifyJWT } from "./middleware/auth.middleware.js";
+import userRouter from "./src//routes/user.routes.js";
+import videoRouter from "./src/routes/video.routes.js";
+import likeRouter from "./src/routes/like.routes.js";
+import commentRouter from "./src/routes/comment.routes.js";
+import dashboardRouter from "./src/routes/dashboard.routes.js";
+import subscriptionRouter from "./src/routes/subscription.routes.js";
+import playlistRouter from "./src/routes/playlist.routes.js";
+import { APIError } from "./src/utils/APIError.js";
+import { verifyJWT } from "./src/middleware/auth.middleware.js";
 
 
 
