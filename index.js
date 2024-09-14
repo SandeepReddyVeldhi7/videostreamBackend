@@ -16,7 +16,7 @@ dataBase()
 app.use(
   cors({
     origin: [
-      "https://videostream-frontend-d9w07goje-sandeepreddys-projects.vercel.app",
+      "https://videostream-frontend.vercel.app",
       "https://videostream-frontend-gsc5w0c9x-sandeepreddys-projects.vercel.app",
       "https://videostream-frontend-i3je62v37-sandeepreddys-projects.vercel.app",
     ],
