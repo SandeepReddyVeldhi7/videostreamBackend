@@ -18,9 +18,7 @@ import {
 
 const router = Router();
 
-router
-  .route("/").get(getAllVideos)
- 
+
 
   router.route("/upload").post(
     verifyJWT,

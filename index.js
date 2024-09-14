@@ -13,13 +13,18 @@ dataBase()
 //middlewares
 
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials:true
-}))
-app.options("*", cors());
+app.use(
+  cors({
+    origin: [
+      "https://videostream-frontend-d9w07goje-sandeepreddys-projects.vercel.app",
+      "https://videostream-frontend-gsc5w0c9x-sandeepreddys-projects.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
 
 
 console.log("url", process.env.FRONTEND_URL);
