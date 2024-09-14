@@ -18,6 +18,7 @@ app.use(
     origin: [
       "https://videostream-frontend-d9w07goje-sandeepreddys-projects.vercel.app",
       "https://videostream-frontend-gsc5w0c9x-sandeepreddys-projects.vercel.app",
+      "https://videostream-frontend-i3je62v37-sandeepreddys-projects.vercel.app",
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
