@@ -333,56 +333,60 @@ const togglePublishStatus = async (req, res) => {
 
 
 const getNextVideos = async (req, res) => {
-  const { videoId } = req.params;
-
-  if (!isValidObjectId(videoId)) throw new APIError(400, "Invalid videoId");
+  try {
+    const { videoId } = req.params;
   
-
-  const video = await Video.findById(videoId);
-
-
-  if (!video) throw new APIError(404, "Video not found");
-
-
-  const nextVideos = await Video.aggregate([
-    {
-      $match: {
-        _id: {
-          $ne: new mongoose.Types.ObjectId(videoId),
-        },
-        isPublished: true,
-      },
-    },
-
-    {
-      $sample: {
-        size: 10,
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "owner",
-        foreignField: "_id",
-        as: "ownerDetails",
-        pipeline: [
-          {
-            $project: {
-              username: 1,
-              avatar: 1,
-            },
+    if (!isValidObjectId(videoId)) throw new APIError(400, "Invalid videoId");
+    
+  
+    const video = await Video.findById(videoId);
+  
+  
+    if (!video) throw new APIError(404, "Video not found");
+  
+  
+    const nextVideos = await Video.aggregate([
+      {
+        $match: {
+          _id: {
+            $ne: new mongoose.Types.ObjectId(videoId),
           },
-        ],
+          isPublished: true,
+        },
       },
-    },
-
-    {
-      $unwind: "$ownerDetails",
-    },
-  ]);
- return res
-   .status(200)
-   .json(new APIResponse(200, nextVideos, "Next videos fetched successfully"));
+  
+      {
+        $sample: {
+          size: 10,
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "ownerDetails",
+          pipeline: [
+            {
+              $project: {
+                username: 1,
+                avatar: 1,
+              },
+            },
+          ],
+        },
+      },
+  
+      {
+        $unwind: "$ownerDetails",
+      },
+    ]);
+   return res
+     .status(200)
+     .json(new APIResponse(200, nextVideos, "Next videos fetched successfully"));
+  } catch (error) {
+     next(error);
+  }
 }
 
 
