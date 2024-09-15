@@ -7,7 +7,7 @@ dotenv.config();
 
 const verifyJWT = async(req ,_, next)=> {
   const token = req.accessToken || req.header("Authorization")?.replace("Bearer", "")
-  
+   console.log("123456",token)
   if (!token) {
     throw new APIError(401,"unauthorization")
   }
