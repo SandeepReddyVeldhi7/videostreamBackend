@@ -332,7 +332,7 @@ const togglePublishStatus = async (req, res) => {
 };
 
 
-const getNextVideos = async (req, res) => {
+const getNextVideos = async (req, res,next) => {
   try {
     const { videoId } = req.params;
   
