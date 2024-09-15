@@ -108,80 +108,74 @@ const Register = asyncHandler(async (req, res, next) => {
 
 
 
-const loginUser =async (req, res,next) => {
-  
+const loginUser = async (req, res, next) => {
   try {
-    const { email, password } = req.body
-    
-    
-      if (!email  || !password) {
-        throw new APIError(400, "All fields are required");
-      }
-  
-      const user = await User.findOne({
-        email 
-      });
-  
-      if (!user) {
-        throw new APIError(404, "User not exist");
-      }
-  
-      const isPasswordVaild = await user.isPasswordCorrect(password);
-  
-      if (!isPasswordVaild) {
-        throw new APIError(404, "User does not exist");
-      }
-  
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      throw new APIError(400, "All fields are required");
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new APIError(404, "User does not exist");
+    }
+
+    const isPasswordValid = await user.isPasswordCorrect(password);
+
+    if (!isPasswordValid) {
+      throw new APIError(401, "Invalid password");
+    }
+
     const tokens = await generateAccessAndRefreshTokens(user._id);
-  
-  console.log("tokens",tokens)
+
     if (!tokens || !tokens.accessToken || !tokens.refreshToken) {
       throw new APIError(500, "Failed to generate tokens");
     }
-  
+
     const { accessToken, refreshToken } = tokens;
-  
-  
-  if (!accessToken || !refreshToken) {
-    throw new APIError(500, "Failed to generate tokens");
-  }
-      const loggedInUser = await User.findById(user._id).select(
-        "-password -refreshToken"
+
+    const loggedInUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
+
+    if (!loggedInUser) {
+      throw new APIError(
+        500,
+        "Something went wrong while fetching user details"
       );
-  
-       if (!loggedInUser) {
-         throw new APIError(
-           500,
-           "Something went wrong while fetching user details"
-         );
-       }
-      const options = {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "None",
-      };
-  
-      return res
-        .status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
-        .json(
-          new APIResponse(
-            200,
-            {
-              user: loggedInUser,
-              accessToken,
-              refreshToken,
-            },
-            "User logged In Successfully"
-          )
-        );
-   
-  } catch (error) {
-    next(error)
+    }
+
+    // Set cookies
     
+
+      res.setHeader("Set-Cookie", [
+        `accessToken=${accessToken}; Max-Age=${
+          1 * 24 * 60 * 60
+        }; Path=/; HttpOnly; Secure; SameSite=None`,
+        `refreshToken=${refreshToken}; Max-Age=${
+          15 * 24 * 60 * 60
+        }; Path=/; HttpOnly; Secure; SameSite=None`,
+      ]);
+
+    // Send response
+    return res.status(200).json(
+      new APIResponse(
+        200,
+        {
+          user: loggedInUser,
+          accessToken,
+          refreshToken,
+        },
+        "User logged in successfully"
+      )
+    );
+  } catch (error) {
+    next(error);
   }
-}
+};
+
 
 const logoutUser = asyncHandler(async (req,res) => {
   await User.findByIdAndUpdate(
