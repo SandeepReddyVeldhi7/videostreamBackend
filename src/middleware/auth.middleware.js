@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { APIError } from "../utils/APIError";
+import { APIError } from "../utils/APIError.js";
 
 dotenv.config();
 
