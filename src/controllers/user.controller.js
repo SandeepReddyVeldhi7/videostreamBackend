@@ -124,7 +124,7 @@ const loginUser =async (req, res,next) => {
   
     const tokens = await generateAccessAndRefreshTokens(user._id);
   
-  
+  console.log("tokens",tokens)
     if (!tokens || !tokens.accessToken || !tokens.refreshToken) {
       throw new APIError(500, "Failed to generate tokens");
     }
