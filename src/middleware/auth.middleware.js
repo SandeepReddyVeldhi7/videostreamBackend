@@ -2,9 +2,7 @@ import { User } from "../models/user.model";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-dotenv.config({
-  path: "../config/.env",
-});
+dotenv.config();
 
 const verifyJWT = async (req, res, next) => {
   try {
