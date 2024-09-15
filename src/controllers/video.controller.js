@@ -514,7 +514,7 @@ const getVideoByIdForGuest = async (req, res) => {
 
 export const getVideoById =async (req, res) => {
   const { videoId } = req.params;
- //console.log("getVideoById triggered", req.params);
+ console.log("getVideoById triggered", req.params);
   if (!isValidObjectId(videoId)) {
     throw new APIError(400, "Invalid video id");
   }

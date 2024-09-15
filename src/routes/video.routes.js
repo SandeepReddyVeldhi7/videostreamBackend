@@ -14,43 +14,34 @@ import {
   getVideoById,
 } from "../controllers/video.controller.js";
 
-
-
 const router = Router();
 
+router.route("/upload").post(
+  verifyJWT,
+  upload.fields([
+    {
+      name: "videoFile",
+      maxCount: 1,
+    },
+    {
+      name: "thumbnail",
+      maxCount: 1,
+    },
+  ]),
+  publishAVideo
+);
 
+router.route("/all/option").get(getAllVideosByOption);
 
-  router.route("/upload").post(
-    verifyJWT,
-    upload.fields([
-      {
-        name: "videoFile",
-        maxCount: 1,
-      },
-      {
-        name: "thumbnail",
-        maxCount: 1,
-      },
-    ]),
-    publishAVideo
-  );
-   
-router.route("/all/option").get(getAllVideosByOption)
+router.get("/v/:videoId", getVideoById);
+router.delete("/v/:videoId", verifyJWT, deleteVideo);
+router.put("/v/:videoId", verifyJWT, upload.single("thumbnail"), updateVideo);
 
-router
-  .route("/v/:videoId")
-  .get(getVideoById)
-  .delete(verifyJWT, deleteVideo)
-    .put(verifyJWT, upload.single("thumbnail"), updateVideo);
-  
-    router
-      .route("/toggle/publish/:videoId")
-    .patch(verifyJWT, togglePublishStatus);
-      
+router.route("/toggle/publish/:videoId").patch(verifyJWT, togglePublishStatus);
+
 router.route("/next/:videoId").get(getNextVideos);
 
 router.route("/v/guest/:videoId").get(getVideoByIdForGuest);
-
 
 router.route("/update/views/:videoId").put(verifyJWT, updateVideoViews);
 
