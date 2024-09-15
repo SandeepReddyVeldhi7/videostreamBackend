@@ -32,9 +32,9 @@ const verifyJWT = async (req, res, next) => {
   } catch (error) {
     console.error("Error in verifyJWT middleware:", error); // Log the error
     if (error.name === "TokenExpiredError") {
-      next(new APIError(401, "Access token expired"));
+      return next(new APIError(401, "Access token expired"));
     } else {
-      next();
+      return next(new APIError(401, "Unauthorized request"));
     }
   }
 };

@@ -69,30 +69,29 @@ userSchema.methods.isPasswordCorrect = async function (password) {
 userSchema.methods.generateAccessToken = function () {
    
  return jwt.sign(
-      {
-        _id: this._id
-    
-      },
+   {
+     _id: this._id,
+   },
 
-      process.env.ACCESS_TOKEN,
-      {
-        expiresIn: "1d",
-      }                           
-    );
+   process.env.ACCESS_TOKEN_EXPIRES,
+   {
+     expiresIn: "1d",
+   }
+ );
 }
  
 
 userSchema.methods.generateRefreshToken = function () {
  
   return jwt.sign(
-      {
-        _id: this._id
-      },
-      process.env.REFRESH_TOKEN,
-      {
-        expiresIn: "12d"
-      }
-    );
+    {
+      _id: this._id,
+    },
+    process.env.REFRESH_TOKEN_EXPIRES,
+    {
+      expiresIn: "12d",
+    }
+  );
 }
 
 
