@@ -12,10 +12,20 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import fs from "fs"
 
 const generateAccessAndRefreshTokens =async (userId) => {
-       const user = await User.findById(userId);
+  const user = await User.findById(userId);
+    if (!user) {
+      throw new APIError(404, "User not found");
+  }
+  
+       console.log("User found:", user);
+
        const accessToken = user.generateAccessToken();
        const refreshToken = user.generateRefreshToken();
 
+  
+  console.log("Generated Access Token:", accessToken); // Log generated access token
+  console.log("Generated Refresh Token:", refreshToken);
+  
        user.refreshToken = refreshToken;
        await user.save({ validateBeforeSave: false });
  // console.log("Generated Tokens:", { accessToken, refreshToken });
@@ -139,6 +149,12 @@ const loginUser =async (req, res,next) => {
         "-password -refreshToken"
       );
   
+       if (!loggedInUser) {
+         throw new APIError(
+           500,
+           "Something went wrong while fetching user details"
+         );
+       }
       const options = {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
