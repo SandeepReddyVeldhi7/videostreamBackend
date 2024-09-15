@@ -75,16 +75,15 @@ app.get("/apple", (req, res) => {
 });
 // Error handling middleware in Express
 app.use((err, req, res, next) => {
-    console.error("Backend Error:", err);
   if (err instanceof APIError) {
     return res.status(err.statusCode).json({
       error: err.message,
     });
   }
 
-  res.status(500).json({
-    error: "An unexpected error occurred",
-  });
+  // Default error handler
+  console.error(err);
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 
