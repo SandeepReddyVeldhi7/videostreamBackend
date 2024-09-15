@@ -27,7 +27,7 @@ const verifyJWT = async (req, res, next) => {
     if (error.name === "TokenExpiredError") {
       next(new APIError(401, "Access token expired"));
     } else {
-      next(new APIError(401, error?.message || "Invalid access token"));
+      next();
     }
   }
 };
