@@ -5,28 +5,28 @@ import { APIError } from "../utils/APIError.js";
 
 dotenv.config();
 
-function verifyJWT(req, res, next) {
-  const token = req.headers["authorization"];
-
+const verifyJWT = async(req ,_, next)=> {
+  const token = req.accessToken || req.header("Authorization")?.replace("Bearer", "")
+  
   if (!token) {
-    return next(new APIError(401, "No token provided"));
+    throw new APIError(401,"unauthorization")
   }
-
-  // JWT verification logic here
-  // If verification fails, send a valid error response
 
   try {
-    // Assuming jwt.verify is a function that verifies the JWT
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        return next(new APIError(401, "Invalid token"));
-      }
-      req.user = decoded;
-      next();
-    });
-  } catch (err) {
-    return next(new APIError(401, "Failed to authenticate token"));
+    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_EXPIRES);
+
+    const user = await User.findById(decodedToken?._id).select("password -refreshToken")
+    if (!user) {
+      throw APIError(401,"unauthorized")
+    }
+ 
+   req.user=user
+  next()
+  } catch (error) {
+    throw APIError(401,error?.message ||"Invalid access token")
   }
+
+
 }
 
 
