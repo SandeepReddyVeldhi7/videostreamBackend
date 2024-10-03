@@ -155,8 +155,7 @@ const getAllVideosByOption = async (req, res) => {
   };
 
 const publishAVideo = async (req, res) => {
-   console.log("Files received:", req.files); // Log the received files
-  console.log("Body received:", req.body); 
+   
   
   const { title, description } = req.body;
 
@@ -259,7 +258,7 @@ const deleteVideo = async (req, res) => {
   console.log("Received videoId:", videoId);
 
   if (!isValidObjectId(videoId)) {
-    console.log("Invalid videoId format");
+
     return res.status(400).json({ error: "Invalid videoId format" });
   }
 
@@ -267,14 +266,14 @@ const deleteVideo = async (req, res) => {
     // Find the video to be deleted
     const currentVideo = await Video.findById(videoId);
     if (!currentVideo) {
-      console.log("Video not found");
+     
       throw new APIError(404, "Video not found");
     }
 
     // Delete video document from MongoDB
     const deleteResult = await Video.findByIdAndDelete(videoId);
     if (!deleteResult) {
-      console.log("Video deletion failed");
+     
       throw new APIError(500, "Video deletion failed");
     }
 
@@ -392,7 +391,7 @@ const getNextVideos = async (req, res,next) => {
 const updateVideoViews = async (req, res) => {
   const { videoId } = req.params;
 
-  console.log("Received videoId:", videoId); // Log the videoId to debug
+ // console.log("Received videoId:", videoId); // 
 
   if (!isValidObjectId(videoId)) throw new APIError(400, "Invalid videoId");
 
