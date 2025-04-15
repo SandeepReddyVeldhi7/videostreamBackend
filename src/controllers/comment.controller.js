@@ -81,7 +81,7 @@ const getVideoComments = async (req, res) => {
         },
     ]);
     if (!commentsAggregate) {
-        throw new APIError(500, "Error creating comments aggregate");
+        throw new APIError(500, "Error creating comments aggregate ");
     }
 
     const options = {
@@ -94,7 +94,7 @@ const getVideoComments = async (req, res) => {
         options
     );
 
-    if (!comments) throw new APIError(501, "Comments Pagination failed");
+    if (!comments) throw new APIError(501, "Comments Pagination failed..");
 
     return res
         .status(200)
